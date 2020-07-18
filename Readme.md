@@ -1,0 +1,1 @@
+Creating a JSON API that will allow users to create, read, update and delete events.
