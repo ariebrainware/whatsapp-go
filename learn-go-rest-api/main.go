@@ -19,9 +19,9 @@ import (
 // create a dummy database.
 // create a struct and a slice.
 type event struct {
-	ID           string `json:"ID"`
-	Title        string `json:"Title"`
-	Description  string `json:"Description"`
+	ID          string `json:"ID"`
+	Title       string `json:"Title"`
+	Description string `json:"Description"`
 }
 type allEvents []event
 
@@ -37,7 +37,8 @@ var events = allEvents{
 // for homeLink to show "Welcome Home" at vs code terminal.
 // stuck to show on postman.
 func homeLink(w http.ResponseWriter, r *http.Request)  {
-	fmt.Println(w, "Welcome Home!")
+	fmt.Fprintf(w, "Welcome to the HomePage!")
+    fmt.Println("Endpoint Hit: homePage")
 }
 
 // create an event.
