@@ -12,3 +12,11 @@ Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX3V1aWQiOiIxZGQ5MDEwYy00MzI
 ## token types:
 * access token: an access token in used for requests that require authentication. it is nomarlly added in the header of the request. it is recommended that an access token have a short lifespan (15 minutes).
 * refresh token: a refresh token has a longer lifespan, usually 7 days. this token is used to generate new access and refresh tokens. In the event that the access token expires , new sets of access and refresh tokens are created when the refresh token route is hit (from our application).
+
+## User table
+DROP TABLE IF EXISTS `user`; 
+    CREATE TABLE `user`( 
+    `id` int(11) NOT NULL AUTO_INCREMENT, 
+    `username` varchar(30) NOT NULL, 
+    `password` varchar(30) NOT NULL, 
+    PRIMARY KEY (`id`));
