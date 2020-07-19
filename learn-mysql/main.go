@@ -21,7 +21,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -89,5 +91,26 @@ func handleRequests() {
 	// creates a new instance of a mux router.
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/create", createNewUser).Methods("POST")
+	myRouter.HandleFunc("/show", getAllUser).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
+}
+
+// crud operation.
+func createNewUser(w http.ResponseWriter, r *http.Request) {
+	// get the body of our POST request
+	// return the string response containing the request body
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var user User
+	json.Unmarshal(reqBody, &user)
+	db.Create(&user)
+	fmt.Println("Endpoint Hit: Creating New Users")
+	json.NewEncoder(w).Encode(user)
+}
+
+func getAllUser(w http.ResponseWriter, r *http.Request) {
+	users := []User{}
+	db.Find(&users)
+	fmt.Println("Endpoint Hit: getAllUser")
+	json.NewEncoder(w).Encode(users)
 }
