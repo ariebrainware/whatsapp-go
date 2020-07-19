@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -90,13 +91,20 @@ func handleRequests() {
 	log.Println("Quit the server with control-C")
 	// creates a new instance of a mux router.
 	myRouter := mux.NewRouter().StrictSlash(true)
+	// for home page.
 	myRouter.HandleFunc("/", homePage)
+	// create user.
 	myRouter.HandleFunc("/create", createNewUser).Methods("POST")
+	// get all user.
 	myRouter.HandleFunc("/show", getAllUser).Methods("GET")
+	// get user by id.
+	myRouter.HandleFunc("/show/{id}", returnSingleUser)
+
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
 
 // crud operation.
+// create user.
 func createNewUser(w http.ResponseWriter, r *http.Request) {
 	// get the body of our POST request
 	// return the string response containing the request body
@@ -108,9 +116,29 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+// get all user.
 func getAllUser(w http.ResponseWriter, r *http.Request) {
 	users := []User{}
 	db.Find(&users)
 	fmt.Println("Endpoint Hit: getAllUser")
 	json.NewEncoder(w).Encode(users)
+}
+
+// get user by id.
+func returnSingleUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["id"]
+	users := []User{}
+	db.Find(&users)
+	for _, user := range users {
+		// string to int.
+		s, err := strconv.Atoi(key)
+		if err == nil {
+			if user.Id == s {
+				fmt.Println(user)
+				fmt.Println("Endpoint Hit: User No:", key)
+				json.NewEncoder(w).Encode(user)
+			}
+		}
+	}
 }
