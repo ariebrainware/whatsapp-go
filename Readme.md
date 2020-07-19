@@ -8,3 +8,7 @@ Creating a JSON API that will allow users to create, read, update and delete eve
 ```javascript
 Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoX3V1aWQiOiIxZGQ5MDEwYy00MzI4LTRmZjMtYjllNi05NDRkODQ4ZTkzNzUiLCJhdXRob3JpemVkIjp0cnVlLCJ1c2VyX2lkIjo3fQ.Qy8l-9GUFsXQm4jqgswAYTAX9F4cngrl28WJVYNDwtM
 ```
+
+## token types:
+* access token: an access token in used for requests that require authentication. it is nomarlly added in the header of the request. it is recommended that an access token have a short lifespan (15 minutes).
+* refresh token: a refresh token has a longer lifespan, usually 7 days. this token is used to generate new access and refresh tokens. In the event that the access token expires , new sets of access and refresh tokens are created when the refresh token route is hit (from our application).
