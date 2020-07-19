@@ -83,3 +83,6 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
+
+// CRUD operations
+// create, read, update and delete.
