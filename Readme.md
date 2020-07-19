@@ -1,5 +1,9 @@
 ## Planning Project
-Creating a JSON API that will allow users to create, read, update and delete events.
+* learn restAPI.
+* database using mysql.
+* authentication.
+* websocket.
+* make a simple chat.
 
 ## JWT (json web token)
 * Header: the type of token and the signing algorithm used.
