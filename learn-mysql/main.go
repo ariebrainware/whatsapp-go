@@ -1,8 +1,8 @@
-// gorilla mux for creating routes and http handlers.
+// gorilla mux : for creating routes and http handlers.
 // go get github.com/go-sql-driver/mysql.
-// gorm an orm tool for mysql.
+// gorm  : an orm tool for mysql.
 // go get github.com/jinzhu/gorm or we can use go get -u github.com/jinzhu/gorm.
-// mysql is the driver.
+// mysql : is the driver.
 // go get github.com/go-sql-driver/mysql.
 // before start, we have to create database manually.
 // mysql -u root -p (Hallo123$).
@@ -11,6 +11,12 @@
 // create file name main.go.
 // we want to connect our application to our database.
 // db, err = gorm.Open(“mysql”, “user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8&parseTime=True”).
+// encoding/json : this package contains methods that are used to convert Go types to JSON and -
+// vice-versa (This conversion is called as encode/decode in Go, serialization/de-serialization or marshall/unmarshall in other languages).
+// fmt - This package implements formatted I/O functions similar to scanf and printf in C.
+// log - Has methods for formatting and printing log messages.
+// net/http - Contains methods for performing operations over HTTP. It provides HTTP server and client implementations and has abstractions for HTTP request, response, headers, etc.
+// time - Provides methods for handling(storing/displaying/manipulating) time values.
 
 package main
 
@@ -59,7 +65,9 @@ func main() {
 }
 
 // create a simple user struct that features id, username, phone, password.
+// default table name is User.
 type User struct {
+	// gorm mode.
 	Id       int    `json:"id"`
 	Username string `json:"username"`
 	Phone    int    `json:"phone"`
@@ -83,6 +91,3 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
-
-// CRUD operations
-// create, read, update and delete.
