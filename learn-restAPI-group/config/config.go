@@ -2,6 +2,7 @@ package config
 
 // go get github.com/jinzhu/gorm.
 import (
+	"../structs"
 	"github.com/jinzhu/gorm"
 )
 
