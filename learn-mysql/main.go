@@ -36,37 +36,6 @@ import (
 var db *gorm.DB
 var err error
 
-func main() {
-	// define username and password for mysql.
-	db, err = gorm.Open("mysql", "root:Hallo123$@tcp(127.0.0.1:3306)/chat?charset=utf8&parseTime=True")
-	// note: we are using = to assign the global var.
-	// instead of := which would assign it only in this function.
-
-	if err != nil {
-		log.Println("Connection Failed to Open!")
-	} else {
-		log.Println("Connection Established!")
-	}
-	// test the file.
-	// go build.
-	// go run main.go.
-	// result: 2020/07/19 14:49:01 Connection Established!.
-	// go to struct.
-	// after creating struct, it is time to migrate our schema.
-	db.AutoMigrate(&User{})
-	// AutoMigrate only create tables, missing columns and missing indexes.
-	// won't change existing column's type or deleted un-used columns to protect our data.
-
-	// call function name handleRequests().
-	handleRequests()
-	// now run the code by typing go run main.go.
-	// result:
-	// 2020/07/19 15:28:44 Connection Established!.
-	// 2020/07/19 15:28:44 Starting development server at http://127.0.0.1:8080.
-	// 2020/07/19 15:28:44 Quit the server with control-C.
-	// open up "http://localhost:8080" in browser and we can see "Welcome to Homepage!".
-}
-
 // create a simple user struct that features id, username, phone, password.
 // default table name is User.
 type User struct {
@@ -98,7 +67,7 @@ func handleRequests() {
 	// get all user.
 	myRouter.HandleFunc("/show", getAllUser).Methods("GET")
 	// get user by id.
-	myRouter.HandleFunc("/show/{id}", returnSingleUser)
+	myRouter.HandleFunc("/show/{id}", getUserByID).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080", myRouter))
 }
@@ -125,7 +94,7 @@ func getAllUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // get user by id.
-func returnSingleUser(w http.ResponseWriter, r *http.Request) {
+func getUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 	users := []User{}
@@ -141,4 +110,35 @@ func returnSingleUser(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+}
+
+func main() {
+	// define username and password for mysql.
+	db, err = gorm.Open("mysql", "root:Hallo123$@tcp(127.0.0.1:3306)/chat?charset=utf8&parseTime=True")
+	// note: we are using = to assign the global var.
+	// instead of := which would assign it only in this function.
+
+	if err != nil {
+		log.Println("Connection Failed to Open!")
+	} else {
+		log.Println("Connection Established!")
+	}
+	// test the file.
+	// go build.
+	// go run main.go.
+	// result: 2020/07/19 14:49:01 Connection Established!.
+	// go to struct.
+	// after creating struct, it is time to migrate our schema.
+	db.AutoMigrate(&User{})
+	// AutoMigrate only create tables, missing columns and missing indexes.
+	// won't change existing column's type or deleted un-used columns to protect our data.
+
+	// call function name handleRequests().
+	handleRequests()
+	// now run the code by typing go run main.go.
+	// result:
+	// 2020/07/19 15:28:44 Connection Established!.
+	// 2020/07/19 15:28:44 Starting development server at http://127.0.0.1:8080.
+	// 2020/07/19 15:28:44 Quit the server with control-C.
+	// open up "http://localhost:8080" in browser and we can see "Welcome to Homepage!".
 }
