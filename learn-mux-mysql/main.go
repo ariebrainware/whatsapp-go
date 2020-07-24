@@ -4,6 +4,7 @@
 // go get github.com/jinzhu/gorm.
 // mysql: the mysql driver.
 // go get github.com/go-sql-driver/mysql.
+// math/rand: to make random id when create (must string type not int).
 
 package main
 
@@ -12,7 +13,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 
@@ -27,7 +30,7 @@ var err error
 
 // struct (class).
 type User struct {
-	ID       int    `json:"id"`
+	ID       string `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -58,6 +61,8 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	// casting payload to User.
 	json.Unmarshal(payloads, &user)
 
+	// create random id.
+	user.ID = strconv.Itoa(rand.Intn(1000000))
 	// user table.
 	db.Create(&user)
 
