@@ -8,7 +8,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -82,5 +84,30 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 // crud test using postman.
 // create user.
 func createUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Create User!")
+	// fmt.Fprintf(w, "Create User!")
+	// variable to get payloads (_ is to catch error but we don't use).
+	payloads, _ := ioutil.ReadAll(r.Body)
+
+	// user variable and User struct.
+	var user User
+	// casting payload to User.
+	json.Unmarshal(payloads, &user)
+
+	// user table.
+	db.Create(&user)
+
+	// data (result from struct).
+	res := Result{Code: 200, Data: user, Message: "Success Create User!"}
+	result, err := json.Marshal(res)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// response.
+	w.Header().Set("Content-Type", "application/json")
+	// http status.
+	w.WriteHeader(http.StatusOK)
+	// res.body.
+	w.Write(result)
 }
