@@ -124,6 +124,43 @@ func getUserById(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
+// update (edit) user by id. it was same with create user.
+func updateUserById(w http.ResponseWriter, r *http.Request) {
+	// get id.
+	vars := mux.Vars(r)
+	userID := vars["id"]
+
+	// variable to get payloads (_ is to catch error but we don't use).
+	payloads, _ := ioutil.ReadAll(r.Body)
+
+	// userUpdate variable and User struct.
+	var userUpdate User
+	// casting payload to User.
+	json.Unmarshal(payloads, &userUpdate)
+
+	// existing user data.
+	var user User
+	// get userID from User table from the existing data.
+	db.First(&user, userID)
+	// update db.
+	db.Model(&user).Update(userUpdate)
+
+	// data (result from struct).
+	res := Result{Code: 200, Data: user, Message: "Success Update User!"}
+	result, err := json.Marshal(res)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// response.
+	w.Header().Set("Content-Type", "application/json")
+	// http status.
+	w.WriteHeader(http.StatusOK)
+	// res.body.
+	w.Write(result)
+}
+
 // in nodejs we call it routes.
 func handleRequests() {
 	// log.Println (console.log on javascript) to see if the routes running.
@@ -139,6 +176,8 @@ func handleRequests() {
 	Router.HandleFunc("/user/show", getAllUser).Methods("GET")
 	// get user by id (in nodejs we defined user at app.js and endpoint on routes).
 	Router.HandleFunc("/user/show/{id}", getUserById).Methods("GET")
+	// update user by id.
+	Router.HandleFunc("/user/update/{id}", updateUserById).Methods("PUT")
 
 	// port.
 	log.Fatal(http.ListenAndServe(":8080", Router))
