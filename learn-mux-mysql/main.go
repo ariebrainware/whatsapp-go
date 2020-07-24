@@ -161,6 +161,36 @@ func updateUserById(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
+// delete user by id.
+func deleteUserById(w http.ResponseWriter, r *http.Request) {
+	// get id.
+	vars := mux.Vars(r)
+	userID := vars["id"]
+
+	// get user from table.
+	var user User
+
+	// delete from database.
+	db.First(&user, userID)
+	db.Delete(&user)
+
+	// data (result from struct).
+	// we don't need send data because it will destroy from database.
+	res := Result{Code: 200, Message: "Success Delete User By ID!"}
+	result, err := json.Marshal(res)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// response.
+	w.Header().Set("Content-Type", "application/json")
+	// http status.
+	w.WriteHeader(http.StatusOK)
+	// res.body.
+	w.Write(result)
+}
+
 // in nodejs we call it routes.
 func handleRequests() {
 	// log.Println (console.log on javascript) to see if the routes running.
@@ -178,6 +208,8 @@ func handleRequests() {
 	Router.HandleFunc("/user/show/{id}", getUserById).Methods("GET")
 	// update user by id.
 	Router.HandleFunc("/user/update/{id}", updateUserById).Methods("PUT")
+	// delete user by id.
+	Router.HandleFunc("/user/delete/{id}", deleteUserById).Methods("DELETE")
 
 	// port.
 	log.Fatal(http.ListenAndServe(":8080", Router))
