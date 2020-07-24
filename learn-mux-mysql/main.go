@@ -99,6 +99,31 @@ func getAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(results)
 }
 
+// get user by id.
+func getUserById(w http.ResponseWriter, r *http.Request) {
+	// get id.
+	vars := mux.Vars(r)
+	userID := vars["id"]
+
+	var user User
+	// get data.
+	db.First(&user, userID)
+	// result.
+	res := Result{Code: 200, Data: user, Message: "Success Get User By ID!"}
+	result, err := json.Marshal(res)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// response.
+	w.Header().Set("Content-Type", "application/json")
+	// http status.
+	w.WriteHeader(http.StatusOK)
+	// res.body.
+	w.Write(result)
+}
+
 // in nodejs we call it routes.
 func handleRequests() {
 	// log.Println (console.log on javascript) to see if the routes running.
@@ -112,6 +137,8 @@ func handleRequests() {
 	Router.HandleFunc("/user/create", createUser).Methods("POST")
 	// get user.
 	Router.HandleFunc("/user/show", getAllUser).Methods("GET")
+	// get user by id (in nodejs we defined user at app.js and endpoint on routes).
+	Router.HandleFunc("/user/show/{id}", getUserById).Methods("GET")
 
 	// port.
 	log.Fatal(http.ListenAndServe(":8080", Router))
